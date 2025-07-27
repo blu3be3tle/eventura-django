@@ -1,8 +1,11 @@
+from .models import Participant
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Q
 from .models import Event, Category, Participant
 from .forms import EventForm
 import datetime
+from django.utils import timezone
 
 
 def event_list(request):
@@ -35,7 +38,7 @@ def event_list(request):
         'events': queryset,
         'categories': categories,
     }
-    return render(request, 'event_app/event_list.html', context)
+    return render(request, 'events/event_list.html', context)
 
 
 def event_detail(request, pk):
@@ -46,7 +49,7 @@ def event_detail(request, pk):
         pk=pk
     )
     context = {'event': event}
-    return render(request, 'event_app/event_detail.html', context)
+    return render(request, 'events/event_detail.html', context)
 
 
 def event_create(request):
@@ -58,7 +61,7 @@ def event_create(request):
     else:
         form = EventForm()
     context = {'form': form}
-    return render(request, 'event_app/event_form.html', context)
+    return render(request, 'events/event_form.html', context)
 
 
 def event_update(request, pk):
@@ -71,7 +74,7 @@ def event_update(request, pk):
     else:
         form = EventForm(instance=event)
     context = {'form': form, 'event': event}
-    return render(request, 'event_app/event_form.html', context)
+    return render(request, 'events/event_form.html', context)
 
 
 def event_delete(request, pk):
@@ -80,4 +83,35 @@ def event_delete(request, pk):
         event.delete()
         return redirect('event-list')
     context = {'event': event}
-    return render(request, 'event_app/event_delete.html', context)
+    return render(request, 'events/event_delete.html', context)
+
+
+def dashboard(request):
+
+    total_participants = Participant.objects.count()
+    total_events = Event.objects.count()
+
+    now = timezone.now()
+    upcoming_events_count = Event.objects.filter(date__gte=now.date()).count()
+    past_events_count = Event.objects.filter(date__lt=now.date()).count()
+
+    event_filter = request.GET.get('filter', 'upcoming')
+    events_to_display = Event.objects.select_related('category')
+
+    if event_filter == 'past':
+        events_to_display = events_to_display.filter(date__lt=now.date())
+    elif event_filter == 'today':
+        events_to_display = events_to_display.filter(date=now.date())
+    else:
+        events_to_display = events_to_display.filter(date__gte=now.date())
+
+    context = {
+        'total_participants': total_participants,
+        'total_events': total_events,
+        'upcoming_events_count': upcoming_events_count,
+        'past_events_count': past_events_count,
+        'today_events': Event.objects.filter(date=now.date()),
+        'events_to_display': events_to_display,
+        'current_filter': event_filter,
+    }
+    return render(request, 'events/dashboard.html', context)
