@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'events',
     'users',
-    'tailwind'
+    'tailwind',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
