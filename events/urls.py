@@ -7,5 +7,5 @@ urlpatterns = [
     path('event/new/', views.event_create, name='event-create'),
     path('event/<int:pk>/edit/', views.event_update, name='event-update'),
     path('event/<int:pk>/delete/', views.event_delete, name='event-delete'),
-    
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]
