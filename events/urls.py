@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     path('event/<int:pk>/edit/', views.event_update, name='event-update'),
     path('event/<int:pk>/delete/', views.event_delete, name='event-delete'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path("__reload__/", include("django_browser_reload.urls"))
 ]
