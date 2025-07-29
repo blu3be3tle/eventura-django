@@ -36,10 +36,7 @@ secret_key.txt
 
 # IDE and editor files
 .DS_Store
-*.sublime-workspace
-*.sublime-project
 *.vscode/
-*.idea/
 
 # Build and package files
 dist/
@@ -63,11 +60,6 @@ media/
 # Node.js/NPM (if using frontend tools with Django)
 node_modules/
 package-lock.json
-yarn.lock
-
-# Docker (if used)
-docker-compose.override.yml
-.Dockerfile
 
 # macOS
 .DS_Store
