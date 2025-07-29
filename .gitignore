@@ -31,7 +31,6 @@ ENV/
 # Django secret key and local settings
 *.env
 .env
-settings.py
 local_settings.py
 secret_key.txt
 
