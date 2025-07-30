@@ -4,11 +4,14 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11"
   },
+
   "scripts": {
-    "build:tailwind": "npx tailwindcss -i ./static/css/tailwind.css -o ./static/css/output.css --minify",
-    "watch:tailwind": "npx tailwindcss -i ./static/css/tailwind.css -o ./static/css/output.css --watch"
+    "start": "gunicorn eventura.wsgi:application",
+    "build": "python manage.py tailwind build"
   },
+
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.11"
   }
+  
 }
