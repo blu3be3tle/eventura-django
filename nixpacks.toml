@@ -1,0 +1,11 @@
+# nixpacks.toml
+
+[phases.build]
+cmds = [
+  "python manage.py tailwind install",
+  "python manage.py tailwind build",
+  "python manage.py collectstatic --noinput"
+]
+
+[phases.deploy]
+start = "gunicorn eventura.wsgi"
