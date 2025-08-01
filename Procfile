@@ -1,1 +1,1 @@
-web: python -m gunicorn eventura.wsgi
+web: python3 -m gunicorn eventura.wsgi
