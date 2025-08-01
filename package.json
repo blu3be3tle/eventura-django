@@ -1,10 +1,11 @@
 {
-  "name": "eventura-django",
-  "version": "1.0.0",
-  "description": "Installs Node.js and Tailwind CSS for the Django project build.",
-  "dependencies": {
-    "tailwindcss": "^3.4.1",
-    "postcss": "^8.4.38",
-    "autoprefixer": "^10.4.19"
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16"
+  },
+  "scripts": {
+    "build:tailwind": "npx tailwindcss -i ./static/css/tailwind.css -o ./static/css/output.css --minify",
+    "watch:tailwind": "npx tailwindcss -i ./static/css/tailwind.css -o ./static/css/output.css --watch"
   }
 }

@@ -1,18 +1,18 @@
 import os
-import dj_database_url
 from decouple import config
 from pathlib import Path
-
+from dotenv import load_dotenv
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Hosts
-ALLOWED_HOSTS = config('DJANGO_ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://127.0.0.1,http://localhost', cast=str).split(',')
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app',  'http://127.0.0.1:8000']
 
 
 # Application definition
@@ -26,17 +26,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'events',
     'users',
-    'tailwind',
-    'eventtheme',
 ]
 
-# Django-tailwind
-TAILWIND_APP_NAME = 'eventtheme'
+
+
 
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Moved for efficiency
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -48,7 +46,8 @@ MIDDLEWARE = [
 
 if DEBUG:
     INSTALLED_APPS.append('django_browser_reload')
-    MIDDLEWARE.append('django_browser_reload.middleware.BrowserReloadMiddleware')
+    MIDDLEWARE.append(
+        'django_browser_reload.middleware.BrowserReloadMiddleware')
     INTERNAL_IPS = ["127.0.0.1"]
 
 ROOT_URLCONF = 'eventura.urls'
@@ -56,7 +55,7 @@ ROOT_URLCONF = 'eventura.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,12 +70,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'eventura.wsgi.application'
 
-# Database 
+# Database
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         conn_max_age=600,
+#         ssl_require=not DEBUG
+#     )
+# }
+
+# postgres
 DATABASES = {
-    'default': dj_database_url.config(
-        conn_max_age=600,
-        ssl_require=not DEBUG
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
+    }
 }
 
 
@@ -98,11 +109,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# if not DEBUG:
+#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
