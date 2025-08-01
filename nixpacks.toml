@@ -1,0 +1,11 @@
+# nixpacks.toml
+
+[phases.build]
+cmds = [
+  "npm install",
+  "npm run build:css",
+  "python3 manage.py collectstatic --noinput"
+]
+
+[start]
+command = "gunicorn eventura.wsgi"
