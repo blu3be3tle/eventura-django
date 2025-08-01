@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 from decouple import config
 from pathlib import Path
 from dotenv import load_dotenv
@@ -8,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables
 SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = True    
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Hosts
 ALLOWED_HOSTS = ["*"]
@@ -22,7 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'events',
     'users',
@@ -72,24 +72,12 @@ WSGI_APPLICATION = 'eventura.wsgi.application'
 DB_LIVE = os.environ.get("DB_LIVE")
 
 # Database
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         conn_max_age=600,
-#         ssl_require=not DEBUG
-#     )
-# }
-
-# postgres
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get("DB_PASSWORD"),
-        'HOST': os.environ.get("DB_HOST"),
-        'PORT': os.environ.get("DB_PORT"),
-    }
-}   
+    'default': dj_database_url.config(
+        conn_max_age=600,
+        ssl_require=not DEBUG
+    )
+}
 
 
 # Password validation
@@ -112,11 +100,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# if not DEBUG:
-#     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
