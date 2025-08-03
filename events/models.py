@@ -3,21 +3,9 @@ from django.utils import timezone
 from datetime import datetime
 
 
-class CategoryType(models.TextChoices):
-    CONFERENCE = 'CON', 'Conference'
-    WORKSHOP = 'WRK', 'Workshop'
-    SEMINAR = 'SEM', 'Seminar'
-    MEETUP = 'MTP', 'Meetup'
-
-
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    category_type = models.CharField(
-        max_length=3,
-        choices=CategoryType.choices,
-        default=CategoryType.CONFERENCE,
-    )
 
     def __str__(self):
         return self.name
