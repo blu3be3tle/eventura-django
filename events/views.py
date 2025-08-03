@@ -114,4 +114,4 @@ def dashboard(request):
         'events_to_display': events_to_display,
         'current_filter': event_filter,
     }
-    return render(request, 'events/dashboard.html', context)
+    return render(request, 'events/organizer_dashboard.html', context)
