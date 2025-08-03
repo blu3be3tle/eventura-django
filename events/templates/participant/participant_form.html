@@ -1,0 +1,50 @@
+{% extends 'events/main.html' %}
+
+{% block content %}
+  <div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">
+      {% if form.instance.pk %}
+        Edit Participant
+      {% else %}
+        Add New Participant
+      {% endif %}
+    </h1>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="space-y-4">
+        <div>
+          <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">Name</label>
+          {{ form.name }}
+        </div>
+        <div>
+          <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
+          {{ form.email }}
+        </div>
+        <div>
+          <label for="{{ form.events.id_for_label }}" class="block text-sm font-medium text-gray-700">Register for Events</label>
+          <div class="mt-2 p-4 border border-gray-200 rounded-md max-h-60 overflow-y-auto">{{ form.events }}</div>
+        </div>
+      </div>
+
+      <div class="mt-8 flex justify-end space-x-4">
+        <a href="{% if form.instance.pk %}
+            {% url 'participant-detail' form.instance.pk %}
+          {% else %}
+            {% url 'participant-list' %}
+          {% endif %}"
+          class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
+          Cancel
+        </a>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+          {% if form.instance.pk %}
+            Save Changes
+          {% else %}
+            Create Participant
+          {% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
