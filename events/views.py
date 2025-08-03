@@ -124,13 +124,13 @@ def organizer_dashboard(request):
 # Participant
 def participant_list(request):
     participants = Participant.objects.all().prefetch_related('events')
-    return render(request, 'events/participant_list.html', {'participants': participants})
+    return render(request, 'participant/participant_list.html', {'participants': participants})
 
 
 def participant_detail(request, pk):
     participant = get_object_or_404(
         Participant.objects.prefetch_related('events'), pk=pk)
-    return render(request, 'events/participant_detail.html', {'participant': participant})
+    return render(request, 'participant/participant_detail.html', {'participant': participant})
 
 
 def participant_create(request):
@@ -141,7 +141,7 @@ def participant_create(request):
             return redirect('participant-detail', pk=participant.pk)
     else:
         form = ParticipantForm()
-    return render(request, 'events/participant_form.html', {'form': form})
+    return render(request, 'participant/participant_form.html', {'form': form})
 
 
 def participant_update(request, pk):
@@ -153,7 +153,7 @@ def participant_update(request, pk):
             return redirect('participant-detail', pk=participant.pk)
     else:
         form = ParticipantForm(instance=participant)
-    return render(request, 'events/participant_form.html', {'form': form, 'participant': participant})
+    return render(request, 'participant/participant_form.html', {'form': form, 'participant': participant})
 
 
 def participant_delete(request, pk):
@@ -161,4 +161,4 @@ def participant_delete(request, pk):
     if request.method == 'POST':
         participant.delete()
         return redirect('participant-list')
-    return render(request, 'events/participant_delete.html', {'participant': participant})
+    return render(request, 'participant/participant_delete.html', {'participant': participant})
