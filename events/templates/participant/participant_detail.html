@@ -8,8 +8,8 @@
         <p class="text-md text-gray-600 mt-1">{{ participant.email }}</p>
       </div>
       <div class="flex space-x-2">
-        <a href="{% url 'participant-update' participant.pk %}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Edit</a>
-        <a href="{% url 'participant-delete' participant.pk %}" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Delete</a>
+        <a href="{% url 'participant-update' participant.pk %}" class="bg-blue-500 text-white p-4 rounded hover:bg-blue-600">Edit</a>
+        <a href="{% url 'participant-delete' participant.pk %}" class="bg-red-500 text-white p-4 rounded border-8 hover:bg-red-600">Delete</a>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
     </div>
 
     <div class="mt-8">
-      <a href="{% url 'participant-list' %}" class="text-blue-600 hover:underline">&larr; Back to all participants</a>
+      <a href="{% url 'participant-list' %}" class="text-blue-600 hover:underline">Back to all participants</a>
     </div>
   </div>
 {% endblock %}
