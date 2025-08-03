@@ -89,7 +89,7 @@ def event_delete(request, pk):
 
 
 # Dashboard
-def dashboard(request):
+def organizer_dashboard(request):
 
     total_participants = Participant.objects.count()
     total_events = Event.objects.count()
@@ -101,11 +101,12 @@ def dashboard(request):
     event_filter = request.GET.get('filter', 'upcoming')
     events_to_display = Event.objects.select_related('category')
 
+    
     if event_filter == 'past':
         events_to_display = events_to_display.filter(date__lt=now.date())
     elif event_filter == 'today':
         events_to_display = events_to_display.filter(date=now.date())
-    else:
+    elif event_filter == 'upcoming':
         events_to_display = events_to_display.filter(date__gte=now.date())
 
     context = {
