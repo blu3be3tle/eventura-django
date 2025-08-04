@@ -1,12 +1,8 @@
-from .models import Participant
-from django.db.models import Count
+from .forms import EventForm, ParticipantForm, CategoryForm
+from .models import Event, Category, Participant
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Q
-from .models import Event, Category, Participant
-from .forms import EventForm
-import datetime
 from django.utils import timezone
-from .forms import EventForm, ParticipantForm
 
 
 # Event
@@ -101,7 +97,6 @@ def organizer_dashboard(request):
     event_filter = request.GET.get('filter', 'upcoming')
     events_to_display = Event.objects.select_related('category')
 
-    
     if event_filter == 'past':
         events_to_display = events_to_display.filter(date__lt=now.date())
     elif event_filter == 'today':
@@ -162,3 +157,55 @@ def participant_delete(request, pk):
         participant.delete()
         return redirect('participant-list')
     return render(request, 'participant/participant_delete.html', {'participant': participant})
+
+
+# Category
+
+
+def category_list(request):
+    categories = Category.objects.all().annotate(event_count=Count('events'))
+    context = {'categories': categories}
+    return render(request, 'events/category_list.html', context)
+
+
+def category_detail(request, pk):
+    category = get_object_or_404(
+        Category.objects.prefetch_related('events'),
+        pk=pk
+    )
+    context = {'category': category}
+    return render(request, 'events/category_detail.html', context)
+
+
+def category_create(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save()
+            return redirect('category-detail', pk=category.pk)
+    else:
+        form = CategoryForm()
+    context = {'form': form}
+    return render(request, 'events/category_form.html', context)
+
+
+def category_update(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('category-detail', pk=category.pk)
+    else:
+        form = CategoryForm(instance=category)
+    context = {'form': form, 'category': category}
+    return render(request, 'events/category_form.html', context)
+
+
+def category_delete(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        category.delete()
+        return redirect('category-list')
+    context = {'category': category}
+    return render(request, 'events/category_delete.html', context)
