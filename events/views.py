@@ -96,7 +96,11 @@ def organizer_dashboard(request):
 
     event_filter = request.GET.get('filter', 'upcoming')
     events_to_display = Event.objects.select_related('category')
+    participants_to_display = Participant.objects.select_related('category')
 
+
+    if event_filter == 'participants':
+        participants_to_display = Participant.objects.all()
     if event_filter == 'past':
         events_to_display = events_to_display.filter(date__lt=now.date())
     elif event_filter == 'today':
@@ -111,6 +115,7 @@ def organizer_dashboard(request):
         'past_events_count': past_events_count,
         'today_events': Event.objects.filter(date=now.date()),
         'events_to_display': events_to_display,
+        'participants_to_display': participants_to_display,
         'current_filter': event_filter,
     }
     return render(request, 'events/organizer_dashboard.html', context)

@@ -1,89 +1,96 @@
 {% extends 'events/main.html' %}
 
 {% block content %}
-  <h1 class="text-3xl font-bold mb-6">Organizer Dashboard</h1>
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">Organizer Dashboard</h1>
 
+  <!-- Stats grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+    <!-- Participants -->
+    <a href="?filter=participants" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50 transition-colors">
       <h3 class="text-xl font-semibold text-gray-700">Total Participants</h3>
       <p class="text-3xl font-bold mt-2">{{ total_participants }}</p>
-    </div>
+    </a>
 
-    <a href="?filter=all" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+    <!-- Events -->
+    <a href="?filter=all" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50 transition-colors">
       <h3 class="text-xl font-semibold text-gray-700">Total Events</h3>
       <p class="text-3xl font-bold mt-2">{{ total_events }}</p>
     </a>
-    <a href="?filter=upcoming" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+    <a href="?filter=upcoming" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50 transition-colors">
       <h3 class="text-xl font-semibold text-gray-700">Upcoming Events</h3>
       <p class="text-3xl font-bold mt-2">{{ upcoming_events_count }}</p>
     </a>
-    <a href="?filter=past" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+    <a href="?filter=past" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50 transition-colors">
       <h3 class="text-xl font-semibold text-gray-700">Past Events</h3>
       <p class="text-3xl font-bold mt-2">{{ past_events_count }}</p>
     </a>
   </div>
 
+  <!-- Today's events -->
   <div class="bg-white p-6 rounded-lg shadow-md mb-8">
     <h2 class="text-2xl font-bold mb-4">Today's Events</h2>
+    {% if today_events %}
+      <ul class="divide-y divide-gray-200">
+        {% for event in today_events %}
+          <li class="py-3 flex justify-between items-center">
+            <div>
+              <p class="font-semibold text-lg">{{ event.name }}</p>
+              <p class="text-sm text-gray-600">{{ event.location }} at {{ event.time }}</p>
+            </div>
+            <a href="{% url 'event-detail' event.pk %}" class="text-blue-500 hover:underline">View</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-gray-500">No events scheduled for today.</p>
+    {% endif %}
   </div>
 
+  <!-- Dynamic section -->
   <div class="bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-4 capitalize">{{ current_filter }} Events</h2>
-  </div>
-
-  <div class="mb-6 flex space-x-4">
-    <a href="?filter=upcoming"
-      class="px-4 py-2 rounded {% if current_filter == 'upcoming' %}
-        
-        bg-blue-600 text-white
-
-      {% else %}
-        
-        bg-white text-blue-600 border border-blue-600
-
-      {% endif %}">
-      Upcoming
-    </a>
-    <a href="?filter=today"
-      class="px-4 py-2 rounded {% if current_filter == 'today' %}
-        
-        bg-blue-600 text-white
-
-      {% else %}
-        
-        bg-white text-blue-600 border border-blue-600
-
-      {% endif %}">
-      Today's
-    </a>
-    <a href="?filter=past"
-      class="px-4 py-2 rounded {% if current_filter == 'past' %}
-        
-        bg-blue-600 text-white
-
-      {% else %}
-        
-        bg-white text-blue-600 border border-blue-600
-
-      {% endif %}">
-      Past
-    </a>
-  </div>
-
-  <div class="bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-4 capitalize">{{ current_filter }} Events</h2>
-    <ul class="divide-y divide-gray-200">
-      {% for event in events_to_display %}
-        <li class="py-3 flex justify-between items-center">
-          <div>
-            <p class="font-semibold text-lg">{{ event.name }}</p>
-            <p class="text-sm text-gray-600">{{ event.date }} at {{ event.time }} - {{ event.location }}</p>
-          </div>
-          <a href="{% url 'event-detail' event.pk %}" class="text-blue-500 hover:underline">View</a>
-        </li>
-      {% empty %}
-        <p>No events to show.</p>
-      {% endfor %}
-    </ul>
+    <!-- Participant list -->
+    {% if current_filter == 'participants' %}
+      <h2 class="text-2xl font-bold mb-4">All Participants</h2>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for participant in participants_to_display %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ participant.name }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ participant.email }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <a href="{% url 'participant-detail' participant.pk %}" class="text-blue-500 hover:underline">View Details</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="3" class="px-6 py-4 text-center text-gray-500">No participants found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <!-- Dynamic event list -->
+      <h2 class="text-2xl font-bold mb-4 capitalize">{{ current_filter|default:'Upcoming' }} Events</h2>
+      <ul class="divide-y divide-gray-200">
+        {% for event in events_to_display %}
+          <li class="py-3 flex justify-between items-center">
+            <div>
+              <p class="font-semibold text-lg">{{ event.name }}</p>
+              <p class="text-sm text-gray-600">{{ event.date }} at {{ event.time }} - {{ event.location }}</p>
+            </div>
+            <a href="{% url 'event-detail' event.pk %}" class="text-blue-500 hover:underline">View</a>
+          </li>
+        {% empty %}
+          <p>No events to show for this filter.</p>
+        {% endfor %}
+      </ul>
+    {% endif %}
   </div>
 {% endblock %}
