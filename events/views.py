@@ -162,6 +162,18 @@ def participant_delete(request, pk):
 # Category
 
 
+def category_create(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save()
+            return redirect('category-detail', pk=category.pk)
+    else:
+        form = CategoryForm()
+    context = {'form': form}
+    return render(request, 'category/category_form.html', context)
+
+
 def category_list(request):
     categories = Category.objects.all().annotate(event_count=Count('events'))
     context = {'categories': categories}
@@ -175,18 +187,6 @@ def category_detail(request, pk):
     )
     context = {'category': category}
     return render(request, 'category/category_detail.html', context)
-
-
-def category_create(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            category = form.save()
-            return redirect('category-detail', pk=category.pk)
-    else:
-        form = CategoryForm()
-    context = {'form': form}
-    return render(request, 'category/category_form.html', context)
 
 
 def category_update(request, pk):
