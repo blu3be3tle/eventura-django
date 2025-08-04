@@ -1,0 +1,21 @@
+{% extends 'events/main.html' %}
+
+{% block content %}
+  <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md text-center">
+    <h1 class="text-3xl font-bold mb-4 text-gray-800">Confirm Deletion</h1>
+
+    <p class="text-lg text-gray-600 mb-6">
+      Are you sure you want to delete the category "<strong>{{ category.name }}</strong>"?
+    </p>
+
+    <p class="text-sm text-red-600 mb-6">All events associated with this category will also be deleted. This action cannot be undone.</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="flex justify-center space-x-4">
+        <a href="{% url 'category-detail' category.pk %}" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300">Cancel</a>
+        <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700">Yes, Delete</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
