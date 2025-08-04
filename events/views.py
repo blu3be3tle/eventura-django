@@ -165,7 +165,7 @@ def participant_delete(request, pk):
 def category_list(request):
     categories = Category.objects.all().annotate(event_count=Count('events'))
     context = {'categories': categories}
-    return render(request, 'events/category_list.html', context)
+    return render(request, 'category/category_list.html', context)
 
 
 def category_detail(request, pk):
@@ -174,7 +174,7 @@ def category_detail(request, pk):
         pk=pk
     )
     context = {'category': category}
-    return render(request, 'events/category_detail.html', context)
+    return render(request, 'category/category_detail.html', context)
 
 
 def category_create(request):
@@ -186,7 +186,7 @@ def category_create(request):
     else:
         form = CategoryForm()
     context = {'form': form}
-    return render(request, 'events/category_form.html', context)
+    return render(request, 'category/category_form.html', context)
 
 
 def category_update(request, pk):
@@ -199,7 +199,7 @@ def category_update(request, pk):
     else:
         form = CategoryForm(instance=category)
     context = {'form': form, 'category': category}
-    return render(request, 'events/category_form.html', context)
+    return render(request, 'category/category_form.html', context)
 
 
 def category_delete(request, pk):
@@ -208,4 +208,4 @@ def category_delete(request, pk):
         category.delete()
         return redirect('category-list')
     context = {'category': category}
-    return render(request, 'events/category_delete.html', context)
+    return render(request, 'category/category_delete.html', context)
