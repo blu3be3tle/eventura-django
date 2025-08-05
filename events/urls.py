@@ -9,7 +9,6 @@ urlpatterns = [
     path('event/new/', views.event_create, name='event-create'),
     path('event/<int:pk>/edit/', views.event_update, name='event-update'),
     path('event/<int:pk>/delete/', views.event_delete, name='event-delete'),
-    path('organizer-dashboard/', views.organizer_dashboard, name='dashboard'),
     path("__reload__/", include("django_browser_reload.urls")),
 
     # Category
