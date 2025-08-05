@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Participant
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Q
+from .forms import ParticipantForm
 
 # Participant
 def participant_list(request):

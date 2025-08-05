@@ -1,4 +1,4 @@
-from .forms import EventForm, ParticipantForm, CategoryForm
+from .forms import EventForm, CategoryForm
 from .models import Event, Category
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Q
