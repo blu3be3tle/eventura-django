@@ -12,18 +12,6 @@ urlpatterns = [
     path('organizer-dashboard/', views.organizer_dashboard, name='dashboard'),
     path("__reload__/", include("django_browser_reload.urls")),
 
-
-    # Participant
-    path('participants/', views.participant_list, name='participant-list'),
-    path('participant/<int:pk>/', views.participant_detail,
-         name='participant-detail'),
-    path('participant/new/', views.participant_create, name='participant-create'),
-    path('participant/<int:pk>/edit/',
-         views.participant_update, name='participant-update'),
-    path('participant/<int:pk>/delete/',
-         views.participant_delete, name='participant-delete'),
-
-
     # Category
     path('categories/', views.category_list, name='category-list'),
     path('category/<int:pk>/', views.category_detail, name='category-detail'),
