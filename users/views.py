@@ -1,48 +1,48 @@
 from django.shortcuts import render
-from .models import Participant
+from .models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Q
-from .forms import ParticipantForm
+from .forms import UserForm
 
-# Participant
-def participant_list(request):
-    participants = Participant.objects.all().prefetch_related('events')
-    return render(request, 'participant/participant_list.html', {'participants': participants})
-
-
-def participant_detail(request, pk):
-    participant = get_object_or_404(
-        Participant.objects.prefetch_related('events'), pk=pk)
-    return render(request, 'participant/participant_detail.html', {'participant': participant})
+# User
+def user_list(request):
+    users = User.objects.all().prefetch_related('events')
+    return render(request, 'user/user_list.html', {'users': users})
 
 
-def participant_create(request):
+def user_detail(request, pk):
+    user = get_object_or_404(
+        User.objects.prefetch_related('events'), pk=pk)
+    return render(request, 'user/user_detail.html', {'user': user})
+
+
+def user_create(request):
     if request.method == 'POST':
-        form = ParticipantForm(request.POST)
+        form = UserForm(request.POST)
         if form.is_valid():
-            participant = form.save()
-            return redirect('participant-detail', pk=participant.pk)
+            user = form.save()
+            return redirect('user-detail', pk=user.pk)
     else:
-        form = ParticipantForm()
-    return render(request, 'participant/participant_form.html', {'form': form})
+        form = UserForm()
+    return render(request, 'user/user_form.html', {'form': form})
 
 
-def participant_update(request, pk):
-    participant = get_object_or_404(Participant, pk=pk)
+def user_update(request, pk):
+    user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
-        form = ParticipantForm(request.POST, instance=participant)
+        form = UserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('participant-detail', pk=participant.pk)
+            return redirect('user-detail', pk=user.pk)
     else:
-        form = ParticipantForm(instance=participant)
-    return render(request, 'participant/participant_form.html', {'form': form, 'participant': participant})
+        form = UserForm(instance=user)
+    return render(request, 'user/user_form.html', {'form': form, 'user': user})
 
 
-def participant_delete(request, pk):
-    participant = get_object_or_404(Participant, pk=pk)
+def user_delete(request, pk):
+    user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
-        participant.delete()
-        return redirect('participant-list')
-    return render(request, 'participant/participant_delete.html', {'participant': participant})
+        user.delete()
+        return redirect('user-list')
+    return render(request, 'user/user_delete.html', {'user': user})
 

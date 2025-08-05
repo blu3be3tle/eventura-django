@@ -3,6 +3,7 @@ from .models import Event, Category
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Q
 from django.utils import timezone
+from users.models import User
 
 
 # Event
@@ -10,8 +11,8 @@ def event_list(request):
 
     queryset = Event.objects.all()
 
-    queryset = queryset.select_related('category').prefetch_related('participants').annotate(
-        participant_count=Count('participants')
+    queryset = queryset.select_related('category').prefetch_related('users').annotate(
+        user_count=Count('users')
     )
 
     category_id = request.GET.get('category')
@@ -43,7 +44,7 @@ def event_detail(request, pk):
 
     event = get_object_or_404(
         Event.objects.select_related(
-            'category').prefetch_related('participants'),
+            'category').prefetch_related('users'),
         pk=pk
     )
     context = {'event': event}
@@ -87,7 +88,7 @@ def event_delete(request, pk):
 # Dashboard
 def organizer_dashboard(request):
 
-    total_participants = Participant.objects.count()
+    total_users = User.objects.count()
     total_events = Event.objects.count()
 
     now = timezone.now()
@@ -96,11 +97,11 @@ def organizer_dashboard(request):
 
     event_filter = request.GET.get('filter', 'upcoming')
     events_to_display = Event.objects.select_related('category')
-    participants_to_display = Participant.objects.select_related('category')
+    users_to_display = User.objects.none()
 
 
-    if event_filter == 'participants':
-        participants_to_display = Participant.objects.all()
+    if event_filter == 'users':
+        users_to_display = User.objects.all()
     if event_filter == 'past':
         events_to_display = events_to_display.filter(date__lt=now.date())
     elif event_filter == 'today':
@@ -109,13 +110,13 @@ def organizer_dashboard(request):
         events_to_display = events_to_display.filter(date__gte=now.date())
 
     context = {
-        'total_participants': total_participants,
+        'total_users': total_users,
         'total_events': total_events,
         'upcoming_events_count': upcoming_events_count,
         'past_events_count': past_events_count,
         'today_events': Event.objects.filter(date=now.date()),
         'events_to_display': events_to_display,
-        'participants_to_display': participants_to_display,
+        'users_to_display': users_to_display,
         'current_filter': event_filter,
     }
     return render(request, 'events/organizer_dashboard.html', context)

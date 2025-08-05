@@ -1,8 +1,8 @@
 from django import forms
-from .models import Event, Participant
+from .models import User
 
 
-class ParticipantForm(forms.ModelForm):
+class UserForm(forms.ModelForm):
     events = forms.ModelMultipleChoiceField(
         queryset=Event.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -10,5 +10,5 @@ class ParticipantForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Participant
+        model = User
         fields = ['name', 'email', 'events']

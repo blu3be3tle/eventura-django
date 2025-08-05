@@ -4,9 +4,9 @@
   <div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md">
     <h1 class="text-3xl font-bold mb-6 text-gray-800">
       {% if form.instance.pk %}
-        Edit Participant
+        Edit User
       {% else %}
-        Add New Participant
+        Add New User
       {% endif %}
     </h1>
 
@@ -30,9 +30,9 @@
 
       <div class="mt-8 flex justify-end space-x-4">
         <a href="{% if form.instance.pk %}
-            {% url 'participant-detail' form.instance.pk %}
+            {% url 'user-detail' form.instance.pk %}
           {% else %}
-            {% url 'participant-list' %}
+            {% url 'user-list' %}
           {% endif %}"
           class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
           Cancel
@@ -41,7 +41,7 @@
           {% if form.instance.pk %}
             Save Changes
           {% else %}
-            Create Participant
+            Create User
           {% endif %}
         </button>
       </div>
