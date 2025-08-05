@@ -12,5 +12,5 @@ urlpatterns = [
          views.user_update, name='user-update'),
     path('user/<int:pk>/delete/',
          views.user_delete, name='user-delete'),
-
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
