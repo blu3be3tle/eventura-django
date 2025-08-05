@@ -72,18 +72,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eventura.wsgi.application'
 DB_LIVE = os.environ.get("DB_LIVE")
 
-# Database
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         conn_max_age=600,
-#         ssl_require=not DEBUG
-#     )
-# }
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# Set default values for the environment variables if they’re not already set
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
