@@ -27,12 +27,3 @@ class Event(models.Model):
     def is_past(self):
         event_datetime = datetime.combine(self.date, self.time)
         return event_datetime < timezone.now().replace(tzinfo=None)
-
-
-class Participant(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    events = models.ManyToManyField(Event, related_name='participants')
-
-    def __str__(self):
-        return self.name
