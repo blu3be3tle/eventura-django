@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event, Category, Participant
+from .models import Event, Category
 
 class EventForm(forms.ModelForm):
     class Meta:
