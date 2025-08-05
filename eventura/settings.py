@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'events',
     'users',
-    'debug_toolbar',
 ]
 
 
@@ -47,6 +46,7 @@ MIDDLEWARE = [
 
 if DEBUG:
     INSTALLED_APPS.append('django_browser_reload')
+    INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.append(
         'django_browser_reload.middleware.BrowserReloadMiddleware')
     INTERNAL_IPS = ["127.0.0.1"]

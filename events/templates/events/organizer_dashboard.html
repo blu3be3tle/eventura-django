@@ -76,8 +76,9 @@
         </tbody>
       </table>
     {% else %}
-      <!-- Dynamic event list -->
-      <h2 class="text-2xl font-bold mb-4 capitalize">{{ current_filter|default:'Upcoming' }} Events</h2>
+
+    <!-- Dynamic event list -->
+    <h2 class="text-2xl font-bold mb-4 capitalize">{{ current_filter|default:'Upcoming' }} Events</h2>
       <ul class="divide-y divide-gray-200">
         {% for event in events_to_display %}
           <li class="py-3 flex justify-between items-center">
@@ -87,6 +88,7 @@
             </div>
             <a href="{% url 'event-detail' event.pk %}" class="text-blue-500 hover:underline">View</a>
           </li>
+
         {% empty %}
           <p>No events to show for this filter.</p>
         {% endfor %}
