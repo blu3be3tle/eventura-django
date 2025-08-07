@@ -1,21 +1,20 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
-
 
 urlpatterns = [
     # Event
     path('', views.event_list, name='event-list'),
-    path('event/<int:pk>/', views.event_detail, name='event-detail'),
-    path('event/new/', views.event_create, name='event-create'),
-    path('event/<int:pk>/edit/', views.event_update, name='event-update'),
-    path('event/<int:pk>/delete/', views.event_delete, name='event-delete'),
-    path("__reload__/", include("django_browser_reload.urls")),
+    path('<int:pk>/', views.event_detail, name='event-detail'),
+    path('new/', views.event_create, name='event-create'),
+    path('<int:pk>/edit/', views.event_update, name='event-update'),
+    path('<int:pk>/delete/', views.event_delete, name='event-delete'),
 
     # Category
     path('categories/', views.category_list, name='category-list'),
-    path('category/<int:pk>/', views.category_detail, name='category-detail'),
-    path('category/new/', views.category_create, name='category-create'),
-    path('category/<int:pk>/edit/', views.category_update, name='category-update'),
-    path('category/<int:pk>/delete/',
+    path('categories/<int:pk>/', views.category_detail, name='category-detail'),
+    path('categories/new/', views.category_create, name='category-create'),
+    path('categories/<int:pk>/edit/',
+         views.category_update, name='category-update'),
+    path('categories/<int:pk>/delete/',
          views.category_delete, name='category-delete'),
 ]
