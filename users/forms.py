@@ -1,6 +1,6 @@
 from django import forms
 from .models import User
-from events.models import Event
+from events.models import Eventgitit
 
 
 class UserForm(forms.ModelForm):
