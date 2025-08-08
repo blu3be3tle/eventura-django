@@ -4,6 +4,12 @@ from django.utils import timezone
 from users.models import User
 
 
+# Home
+def home_view(request):
+    return render(request, 'dashboard/home.html')
+
+
+# Dashboard
 def organizer_dashboard(request):
 
     total_users = User.objects.count()
