@@ -18,7 +18,7 @@ class UserForm(forms.ModelForm):
     
 
 
-class RegisterForm(UserCreationForm):
+class SignUpForm(UserCreationForm):
 
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
     first_name = forms.CharField(max_length=30, required=True)

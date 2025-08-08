@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from .models import User
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Count, Q
 from .forms import UserForm
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate, logout
+from users.forms import SignUpForm
+
 
 # User
+
 def user_list(request):
     users = User.objects.all().prefetch_related('events')
     return render(request, 'user/user_list.html', {'users': users})
@@ -46,3 +50,36 @@ def user_delete(request, pk):
         return redirect('user-list')
     return render(request, 'user/user_delete.html', {'user': user})
 
+
+# Sign up
+
+def sign_up(request):
+    form = SignUpForm()
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('event-list')
+        else:
+            print("Form is not valid")
+    return render(request, 'registration/signup.html', {"form": form})
+
+
+def sign_in(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print("Doc", username, password)
+        user = authenticate(request, username=username, password=password)
+        print(user)
+        if user is not None:
+            login(request, user)
+            return redirect('event-list')
+    return render(request, 'registration/login.html')
+
+
+def sign_out(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('sign-in')
