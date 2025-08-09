@@ -81,4 +81,4 @@ def signin(request):
 def signout(request):
     if request.method == 'POST':
         logout(request)
-        return redirect('sign-in')
+        return redirect('login')
