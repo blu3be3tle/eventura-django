@@ -20,6 +20,7 @@ class Event(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name='events'
     )
+    image = models.ImageField(upload_to='event_images/',  blank=True, null=True, default='default.jpg')
 
     def __str__(self):
         return self.name
