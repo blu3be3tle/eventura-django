@@ -73,7 +73,7 @@ def admin_dashboard(request):
             events_query = events_query.filter(date__gte=today)
         context['events_to_display'] = events_query
 
-    return render(request, 'dashboard/admin_dashboard.html', context)
+    return render(request, 'dashboard/admin/admin_dashboard.html', context)
 
 
 @user_passes_test(is_admin, login_url='login')

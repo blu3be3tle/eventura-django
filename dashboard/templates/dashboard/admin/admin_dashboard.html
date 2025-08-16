@@ -1,45 +1,49 @@
 {% extends 'events/main.html' %}
+{% load static %}
 
 {% block content %}
-  <div class="container mx-auto p-6">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-      <div>
-        <a href="{% url 'group-list' %}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">Manage Groups</a>
-      </div>
-    </div>
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">Admin Dashboard</h1>
 
-    {% if messages %}
-      {% for message in messages %}
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-          <span class="block sm:inline">{{ message }}</span>
-        </div>
-      {% endfor %}
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+    <a href="?filter=users" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Total Users</h3>
+      <p class="text-3xl font-bold mt-2">{{ total_users }}</p>
+    </a>
+
+    <a href="?filter=categories" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Total Categories</h3>
+      <p class="text-3xl font-bold mt-2">{{ total_categories }}</p>
+    </a>
+
+    <a href="?filter=all" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Total Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ total_events }}</p>
+    </a>
+    
+    <a href="?filter=all" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Total Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ total_events }}</p>
+    </a>
+
+    <a href="?filter=upcoming" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Upcoming Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ upcoming_events_count }}</p>
+    </a>
+
+    <a href="?filter=past" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Past Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ past_events_count }}</p>
+    </a>
+  </div>
+
+
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    {% if current_filter == 'users' %}
+      {% include 'dashboard/includes/user_list.html' %}
+    {% elif current_filter == 'categories' %}
+      {% include 'dashboard/includes/category_list.html' %}
+    {% else %}
+      {% include 'dashboard/includes/event_list.html' %}
     {% endif %}
-
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Username</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Role</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-          {% for user in users %}
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">{{ user.username }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ user.email }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ user.groups.first.name|default:'Participant' }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <a href="{% url 'assign-role' user.id %}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Change Role</a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
   </div>
 {% endblock %}
