@@ -22,6 +22,28 @@
       <p class="text-gray-600 mt-2">{{ event.description }}</p>
     </div>
 
+    <div class="mt-8 border-t pt-6">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">RSVP for this Event</h2>
+
+      {% if user.is_authenticated %}
+        {% if user in event.users.all %}
+          <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+            <p class="font-bold">You have RSVP'd!</p>
+            <p>A confirmation email has been sent. We look forward to seeing you.</p>
+          </div>
+        {% else %}
+          <form action="{% url 'rsvp-event' event.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">Click here to RSVP</button>
+          </form>
+        {% endif %}
+      {% else %}
+        <p class="text-gray-600">
+          Please <a href="{% url 'login' %}" class="text-blue-600 hover:underline">log in</a> to RSVP for this event.
+        </p>
+      {% endif %}
+    </div>
+
     <div class="mt-6">
       <h3 class="text-2xl font-semibold">Users ({{ event.users.count }})</h3>
       <ul class="list-disc list-inside mt-2 text-gray-600">

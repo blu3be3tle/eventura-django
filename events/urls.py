@@ -8,6 +8,7 @@ urlpatterns = [
     path('new/', views.event_create, name='event-create'),
     path('<int:pk>/edit/', views.event_update, name='event-update'),
     path('<int:pk>/delete/', views.event_delete, name='event-delete'),
+    path('<int:pk>/rsvp/', views.rsvp_event, name='rsvp-event'),
 
     # Category
     path('categories/', views.category_list, name='category-list'),

@@ -1,17 +1,14 @@
-from .forms import EventForm, CategoryForm
-from .models import Event, Category
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Q
-from django.utils import timezone
-from users.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .forms import EventForm, CategoryForm
+from .models import Event, Category
 
 
-# Event
+# Events
 def event_list(request):
-
-    queryset = Event.objects.all()
-
-    queryset = queryset.select_related('category').prefetch_related('users').annotate(
+    queryset = Event.objects.select_related('category').prefetch_related('users').annotate(
         user_count=Count('users')
     )
 
@@ -19,61 +16,51 @@ def event_list(request):
     if category_id:
         queryset = queryset.filter(category__id=category_id)
 
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
+    start_date, end_date = request.GET.get('start_date'), request.GET.get('end_date')
     if start_date and end_date:
         queryset = queryset.filter(date__range=[start_date, end_date])
 
     search_query = request.GET.get('search', '')
     if search_query:
         queryset = queryset.filter(
-            Q(name__icontains=search_query) | Q(
-                location__icontains=search_query)
+            Q(name__icontains=search_query) |
+            Q(location__icontains=search_query)
         )
 
     categories = Category.objects.all()
-
-    context = {
-        'events': queryset,
-        'categories': categories,
-    }
+    context = {'events': queryset, 'categories': categories}
     return render(request, 'events/event_list.html', context)
 
 
 def event_detail(request, pk):
-
     event = get_object_or_404(
-        Event.objects.select_related(
-            'category').prefetch_related('users'),
+        Event.objects.select_related('category').prefetch_related('users'),
         pk=pk
     )
-    context = {'event': event}
-    return render(request, 'events/event_detail.html', context)
+    return render(request, 'events/event_detail.html', {'event': event})
 
 
 def event_create(request):
     if request.method == 'POST':
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('event-list')
     else:
         form = EventForm()
-    context = {'form': form}
-    return render(request, 'events/event_form.html', context)
+    return render(request, 'events/event_form.html', {'form': form})
 
 
 def event_update(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if request.method == 'POST':
-        form = EventForm(request.POST, instance=event)
+        form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             form.save()
             return redirect('event-detail', pk=pk)
     else:
         form = EventForm(instance=event)
-    context = {'form': form, 'event': event}
-    return render(request, 'events/event_form.html', context)
+    return render(request, 'events/event_form.html', {'form': form, 'event': event})
 
 
 def event_delete(request, pk):
@@ -81,11 +68,20 @@ def event_delete(request, pk):
     if request.method == 'POST':
         event.delete()
         return redirect('event-list')
-    context = {'event': event}
-    return render(request, 'events/event_delete.html', context)
+    return render(request, 'events/event_delete.html', {'event': event})
 
 
-# Category
+# Categories
+def category_list(request):
+    categories = Category.objects.annotate(event_count=Count('events'))
+    return render(request, 'category/category_list.html', {'categories': categories})
+
+
+def category_detail(request, pk):
+    category = get_object_or_404(Category.objects.prefetch_related('events'), pk=pk)
+    return render(request, 'category/category_detail.html', {'category': category})
+
+
 def category_create(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -94,23 +90,7 @@ def category_create(request):
             return redirect('category-detail', pk=category.pk)
     else:
         form = CategoryForm()
-    context = {'form': form}
-    return render(request, 'category/category_form.html', context)
-
-
-def category_list(request):
-    categories = Category.objects.all().annotate(event_count=Count('events'))
-    context = {'categories': categories}
-    return render(request, 'category/category_list.html', context)
-
-
-def category_detail(request, pk):
-    category = get_object_or_404(
-        Category.objects.prefetch_related('events'),
-        pk=pk
-    )
-    context = {'category': category}
-    return render(request, 'category/category_detail.html', context)
+    return render(request, 'category/category_form.html', {'form': form})
 
 
 def category_update(request, pk):
@@ -122,8 +102,7 @@ def category_update(request, pk):
             return redirect('category-detail', pk=category.pk)
     else:
         form = CategoryForm(instance=category)
-    context = {'form': form, 'category': category}
-    return render(request, 'category/category_form.html', context)
+    return render(request, 'category/category_form.html', {'form': form, 'category': category})
 
 
 def category_delete(request, pk):
@@ -131,5 +110,19 @@ def category_delete(request, pk):
     if request.method == 'POST':
         category.delete()
         return redirect('category-list')
-    context = {'category': category}
-    return render(request, 'category/category_delete.html', context)
+    return render(request, 'category/category_delete.html', {'category': category})
+
+
+# RSVP
+@login_required
+def rsvp_event(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+
+    if request.method == 'POST':
+        if event.users.filter(id=request.user.id).exists():
+            messages.warning(request, "You have already RSVP'd to this event.")
+        else:
+            event.users.add(request.user)
+            messages.success(request, f"You have successfully RSVP'd for {event.name}!")
+
+    return redirect('event-detail', pk=pk)

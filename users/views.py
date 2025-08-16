@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from users.forms import SignUpForm, LoginForm
-from django.conf import settings
 
 # Sign up
 def signup(request):
@@ -31,11 +31,9 @@ def signin(request):
     return render(request, 'registration/login.html', {"form": form})
 
 
-
 def signout(request):
     logout(request)
     return redirect('login')
-
 
 
 def activate_user(request, user_id, token):
@@ -50,3 +48,4 @@ def activate_user(request, user_id, token):
         return render(request, 'registration/activation_success.html')
     else:
         return render(request, 'registration/activation_invalid.html')
+

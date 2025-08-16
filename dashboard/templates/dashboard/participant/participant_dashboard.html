@@ -1,0 +1,26 @@
+{% extends 'events/main.html' %}
+
+{% block content %}
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">My Events Dashboard</h1>
+    <p class="text-lg text-gray-600 mb-8">Here are the events you have RSVP'd for.</p>
+
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <ul class="divide-y divide-gray-200">
+        {% for event in rsvpd_events %}
+          <li class="p-6 flex justify-between items-center hover:bg-gray-50">
+            <div>
+              <p class="font-semibold text-xl text-gray-900">{{ event.name }}</p>
+              <p class="text-md text-gray-600 mt-1">{{ event.date }} at {{ event.time }} &mdash; {{ event.location }}</p>
+            </div>
+            <a href="{% url 'event-detail' event.pk %}" class="text-blue-500 hover:underline font-medium">View Details</a>
+          </li>
+        {% empty %}
+          <li class="p-6 text-center text-gray-500">
+            You have not RSVP'd for any events yet. <a href="{% url 'event-list' %}" class="text-blue-600 hover:underline">Browse events now!</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}
