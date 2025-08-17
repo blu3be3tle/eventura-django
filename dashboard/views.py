@@ -33,9 +33,8 @@ def dashboard_redirect(request):
     else:
         return redirect('participant-dashboard')
 
+
 # Admin
-
-
 @user_passes_test(is_admin, login_url='login')
 def admin_dashboard(request):
     now = timezone.now()
@@ -49,7 +48,7 @@ def admin_dashboard(request):
     past_events_count = Event.objects.filter(date__lt=today).count()
 
     current_filter = request.GET.get(
-        'filter', 'users') 
+        'filter', 'users')
 
     context = {
         'total_users': total_users,
@@ -67,7 +66,7 @@ def admin_dashboard(request):
     elif current_filter == 'categories':
         context['categories_to_display'] = Category.objects.all().annotate(
             event_count=Count('events'))
-    else: 
+    else:
         events_query = Event.objects.select_related('category')
         if current_filter == 'past':
             events_query = events_query.filter(date__lt=today)
@@ -134,12 +133,42 @@ def create_group(request):
 
 
 # Organizer
+@user_passes_test(is_organizer, login_url='login')
 def organizer_dashboard(request):
-    pass
+    now = timezone.now()
+    today = now.date()
+
+    total_events = Event.objects.count()
+    total_categories = Category.objects.count()
+    upcoming_events_count = Event.objects.filter(date__gte=today).count()
+    past_events_count = Event.objects.filter(date__lt=today).count()
+
+    current_filter = request.GET.get(
+        'filter', 'upcoming')
+
+    context = {
+        'total_events': total_events,
+        'total_categories': total_categories,
+        'upcoming_events_count': upcoming_events_count,
+        'past_events_count': past_events_count,
+        'current_filter': current_filter,
+    }
+
+    if current_filter == 'categories':
+        context['categories_to_display'] = Category.objects.all().annotate(
+            event_count=Count('events'))
+    else:
+        events_query = Event.objects.select_related('category')
+        if current_filter == 'past':
+            events_query = events_query.filter(date__lt=today)
+        elif current_filter == 'upcoming':
+            events_query = events_query.filter(date__gte=today)
+        context['events_to_display'] = events_query
+
+    return render(request, 'dashboard/organizer_dashboard.html', context)
+
 
 # Participant
-
-
 @login_required
 def participant_dashboard(request):
     rsvpd_events = Event.objects.filter(
