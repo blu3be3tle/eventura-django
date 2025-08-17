@@ -41,7 +41,7 @@ def assign_default_role(sender, instance, created, **kwargs):
 
 
 @receiver(m2m_changed, sender=Event.users.through)
-def send_rsvp_notification(sender, instance, action, pk_set, **kwargs):
+def rsvp_notification(sender, instance, action, pk_set, **kwargs):
     if action == 'post_add':
         for user_pk in pk_set:
             user = User.objects.get(pk=user_pk)
