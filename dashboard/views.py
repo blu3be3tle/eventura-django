@@ -141,7 +141,7 @@ def organizer_dashboard(request):
 
 
 @login_required
-def participant_dashboard_view(request):
+def participant_dashboard(request):
     rsvpd_events = Event.objects.filter(
         users=request.user).order_by('date', 'time')
 
