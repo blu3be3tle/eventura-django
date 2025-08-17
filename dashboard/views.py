@@ -44,19 +44,20 @@ def admin_dashboard(request):
     total_users = User.objects.count()
     total_events = Event.objects.count()
     total_categories = Category.objects.count()
+    today_events_count = Event.objects.filter(date=today).count()
     upcoming_events_count = Event.objects.filter(date__gte=today).count()
     past_events_count = Event.objects.filter(date__lt=today).count()
 
     current_filter = request.GET.get(
-        'filter', 'users')
+        'filter', 'users') 
 
     context = {
         'total_users': total_users,
         'total_events': total_events,
         'total_categories': total_categories,
+        'today_events_count': today_events_count,
         'upcoming_events_count': upcoming_events_count,
         'past_events_count': past_events_count,
-        'today_events': Event.objects.filter(date=today),
         'current_filter': current_filter,
     }
 
@@ -66,11 +67,15 @@ def admin_dashboard(request):
     elif current_filter == 'categories':
         context['categories_to_display'] = Category.objects.all().annotate(
             event_count=Count('events'))
+    else: 
         events_query = Event.objects.select_related('category')
         if current_filter == 'past':
             events_query = events_query.filter(date__lt=today)
         elif current_filter == 'upcoming':
             events_query = events_query.filter(date__gte=today)
+        elif current_filter == 'today':
+            events_query = events_query.filter(date=today)
+
         context['events_to_display'] = events_query
 
     return render(request, 'dashboard/admin/admin_dashboard.html', context)

@@ -19,10 +19,10 @@
       <h3 class="text-xl font-semibold text-gray-700">Total Events</h3>
       <p class="text-3xl font-bold mt-2">{{ total_events }}</p>
     </a>
-    
-    <a href="?filter=all" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
-      <h3 class="text-xl font-semibold text-gray-700">Total Events</h3>
-      <p class="text-3xl font-bold mt-2">{{ total_events }}</p>
+
+    <a href="?filter=today" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Today's Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ today_events_count }}</p>
     </a>
 
     <a href="?filter=upcoming" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
@@ -35,7 +35,6 @@
       <p class="text-3xl font-bold mt-2">{{ past_events_count }}</p>
     </a>
   </div>
-
 
   <div class="bg-white p-6 rounded-lg shadow-md">
     {% if current_filter == 'users' %}
