@@ -40,7 +40,6 @@ def assign_default_role(sender, instance, created, **kwargs):
         instance.group.add(participant_group)
 
 
-
 @receiver(m2m_changed, sender=Event.users.through)
 def send_rsvp_notification(sender, instance, action, pk_set, **kwargs):
     if action == 'post_add':
@@ -49,8 +48,14 @@ def send_rsvp_notification(sender, instance, action, pk_set, **kwargs):
             event = instance
 
             subject = f'RSVP Confirmation for: {event.name}'
-            message = render_to_string('users/rsvp_email.html', {
-                'user': user,
-                'event': event,
-            })
+            message = (
+                f"Hi {user.username},\n\n"
+                f"This is a confirmation that you have successfully RSVP'd for the event:\n\n"
+                f"Event: {event.name}\n"
+                f"Date: {event.date}\n"
+                f"Time: {event.time}\n"
+                f"Location: {event.location}\n\n"
+                "We look forward to seeing you there!\n\n"
+                "Thanks,\nThe Eventura Team"
+            )
             send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
