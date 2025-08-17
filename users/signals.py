@@ -1,3 +1,6 @@
+from events.models import Event
+from django.template.loader import render_to_string
+from django.db.models.signals import m2m_changed
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
@@ -31,6 +34,23 @@ def send_activation_email(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def assign_default_role(sender, instance, created, **kwargs):
     if created:
-        participant_group, created = Group.objects.get_or_create(name='Participant')
+        participant_group, created = Group.objects.get_or_create(
+            name='Participant')
 
         instance.group.add(participant_group)
+
+
+
+@receiver(m2m_changed, sender=Event.users.through)
+def send_rsvp_notification(sender, instance, action, pk_set, **kwargs):
+    if action == 'post_add':
+        for user_pk in pk_set:
+            user = User.objects.get(pk=user_pk)
+            event = instance
+
+            subject = f'RSVP Confirmation for: {event.name}'
+            message = render_to_string('users/rsvp_email.html', {
+                'user': user,
+                'event': event,
+            })
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
