@@ -7,7 +7,7 @@
     <!-- Create event -->
     {% if user.is_authenticated %}
       {% if 'Organizer' in user.groups.all|join:',' or 'Admin' in user.groups.all|join:',' or user.is_superuser %}
-        <a href="{% url 'event-create' %}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600">
+        <a href="{% url 'event-create' %}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
           Create New Event
         </a>
       {% endif %}
@@ -19,7 +19,7 @@
     <form method="get" action="{% url 'event-list' %}">
       <div class="flex items-center space-x-4">
         <input type="text" name="search" placeholder="Search by name or location..." class="p-2 border rounded w-full" value="{{ request.GET.search }}" />
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Search</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Search</button>
       </div>
     </form>
   </div>
