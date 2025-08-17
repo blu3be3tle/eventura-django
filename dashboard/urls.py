@@ -1,4 +1,3 @@
-# dashboard/urls.py
 from django.urls import path
 from .views import home_view, admin_dashboard, manage_user, group_list, create_group, user_delete, participant_dashboard
 
