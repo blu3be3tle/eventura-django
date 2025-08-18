@@ -10,7 +10,7 @@ from events.models import Event, Category
 from django.db.models import Count
 
 
-# Home
+# Shared
 def home_view(request):
     return render(request, 'dashboard/home.html')
 
@@ -32,6 +32,10 @@ def dashboard(request):
         return redirect('organizer-dashboard')
     else:
         return redirect('participant-dashboard')
+
+@login_required
+def no_permission(request):
+    return render(request, 'shared/no_permission.html')
 
 
 # Admin
