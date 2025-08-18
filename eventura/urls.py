@@ -9,6 +9,7 @@ urlpatterns = [
     path('events/', include('events.urls')),
     path('users/', include('users.urls')),
     path('', include('dashboard.urls')),
+    path('no-permission/', no_permission, name='no-permission')
 ]
 
 if settings.DEBUG:
