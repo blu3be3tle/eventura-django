@@ -12,7 +12,7 @@ from django.db.models import Count
 
 # Shared
 def home_view(request):
-    return render(request, 'dashboard/home.html')
+    return render(request, 'dashboard/shared/home.html')
 
 
 def is_admin(user):
