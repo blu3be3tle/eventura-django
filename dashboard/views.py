@@ -35,7 +35,7 @@ def dashboard(request):
 
 @login_required
 def no_permission(request):
-    return render(request, 'shared/no_permission.html')
+    return render(request, 'dashboard/shared/no_permission.html')
 
 
 # Admin
