@@ -39,7 +39,7 @@ def no_permission(request):
 
 
 # Admin
-@user_passes_test(is_admin, login_url='login')
+@user_passes_test(is_admin, login_url='no-permission')
 def admin_dashboard(request):
     now = timezone.now()
     today = now.date()
@@ -84,7 +84,7 @@ def admin_dashboard(request):
     return render(request, 'dashboard/admin/admin_dashboard.html', context)
 
 
-@user_passes_test(is_admin, login_url='login')
+@user_passes_test(is_admin, login_url='no-permission')
 def manage_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
@@ -103,7 +103,7 @@ def manage_user(request, user_id):
     return render(request, 'dashboard/admin/manage_user.html', {'form': form, 'user_to_manage': user})
 
 
-@user_passes_test(is_admin, login_url='login')
+@user_passes_test(is_admin, login_url='no-permission')
 def user_delete(request, pk):
     user_to_delete = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -116,13 +116,13 @@ def user_delete(request, pk):
     return render(request, 'dashboard/admin/user_delete.html', context)
 
 
-@user_passes_test(is_admin, login_url='login')
+@user_passes_test(is_admin, login_url='no-permission')
 def group_list(request):
     groups = Group.objects.all().prefetch_related('permissions')
     return render(request, 'dashboard/admin/group_list.html', {'groups': groups})
 
 
-@user_passes_test(is_admin, login_url='login')
+@user_passes_test(is_admin, login_url='no-permission')
 def create_group(request):
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
@@ -137,7 +137,7 @@ def create_group(request):
 
 
 # Organizer
-@user_passes_test(is_organizer, login_url='login')
+@user_passes_test(is_organizer, login_url='no-permission')
 def organizer_dashboard(request):
     now = timezone.now()
     today = now.date()
