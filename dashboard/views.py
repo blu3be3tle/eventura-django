@@ -24,7 +24,7 @@ def is_organizer(user):
 
 
 @login_required
-def dashboard_redirect(request):
+def dashboard(request):
 
     if is_admin(request.user):
         return redirect('admin-dashboard')

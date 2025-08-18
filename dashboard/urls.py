@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home_view, admin_dashboard, manage_user, group_list, create_group, user_delete, participant_dashboard, organizer_dashboard
+from .views import home_view, admin_dashboard, manage_user, group_list, create_group, user_delete, participant_dashboard, organizer_dashboard, dashboard
 
 urlpatterns = [
     path('', home_view, name='home'),
@@ -12,4 +12,6 @@ urlpatterns = [
     path('<int:pk>/delete/', user_delete, name='user-delete'),
     path('dashboard/participant/', participant_dashboard, name='participant-dashboard'),
     path('dashboard/organizer/', organizer_dashboard, name='organizer-dashboard'),
+
+    path('dashboard', dashboard, name='dashboard'),
 ]
