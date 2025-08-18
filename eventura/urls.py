@@ -3,13 +3,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
-from dashboard.views import no_permission
+from dashboard.views import no_permission, home_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('events/', include('events.urls')),
     path('users/', include('users.urls')),
-    path('', include('dashboard.urls')),
+    path('dashboard/', include('dashboard.urls')),
+    path('', home_view, name='home'),
     path('no-permission/', no_permission, name='no-permission')
 ]
 
