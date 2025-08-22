@@ -9,9 +9,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 
+
 # Sign up
-
-
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
