@@ -28,7 +28,7 @@ class EditProfileForm(forms.ModelForm):
 class EditProfilePictureForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('profile_picture', 'phone_number')
+        fields = ('profile_image', 'phone_number')
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
