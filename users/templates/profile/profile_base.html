@@ -1,0 +1,24 @@
+{% extends 'events/main.html' %}
+
+{% block content %}
+  <div class="flex flex-col md:flex-row min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-full md:w-64 bg-white shadow-md md:min-h-full">
+      <div class="p-4 border-b">
+        <h2 class="text-xl font-semibold text-gray-800">Profile Menu</h2>
+      </div>
+      <nav class="mt-4">
+        <a href="{% url 'profile' %}" class="block py-2.5 px-4 text-gray-700 hover:bg-gray-200">My Profile</a>
+        <a href="{% url 'edit-profile' %}" class="block py-2.5 px-4 text-gray-700 hover:bg-gray-200">Edit Profile</a>
+        <a href="{% url 'change-password' %}" class="block py-2.5 px-4 text-gray-700 hover:bg-gray-200">Change Password</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="flex-1 p-8">
+      {% block profile_content %}
+
+      {% endblock %}
+    </main>
+  </div>
+{% endblock %}
