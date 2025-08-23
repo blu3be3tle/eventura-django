@@ -95,7 +95,7 @@ class EditProfileView(LoginRequiredMixin, View):
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
 
     form_class = CustomPasswordChangeForm
-    template_name = 'users/profile/change_password.html'
+    template_name = 'profile/change_password.html'
     success_url = reverse_lazy('profile')
 
     def form_valid(self, form):
