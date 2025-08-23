@@ -1,74 +1,82 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Q
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import EventForm, CategoryForm
+from users.decorators import is_organizer
 from .models import Event, Category
+from .forms import EventForm, CategoryForm
 
 
-# Events
-def event_list(request):
-    queryset = Event.objects.select_related('category').prefetch_related('users').annotate(
-        user_count=Count('users')
-    )
+# Event
+class EventListView(ListView):
+    model = Event
+    template_name = 'events/event_list.html'
+    context_object_name = 'events'
 
-    category_id = request.GET.get('category')
-    if category_id:
-        queryset = queryset.filter(category__id=category_id)
-
-    start_date, end_date = request.GET.get('start_date'), request.GET.get('end_date')
-    if start_date and end_date:
-        queryset = queryset.filter(date__range=[start_date, end_date])
-
-    search_query = request.GET.get('search', '')
-    if search_query:
-        queryset = queryset.filter(
-            Q(name__icontains=search_query) |
-            Q(location__icontains=search_query)
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related('category').prefetch_related('users').annotate(
+            user_count=Count('users')
         )
 
-    categories = Category.objects.all()
-    context = {'events': queryset, 'categories': categories}
-    return render(request, 'events/event_list.html', context)
+        category_id = self.request.GET.get('category')
+        if category_id:
+            queryset = queryset.filter(category__id=category_id)
+
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        if start_date and end_date:
+            queryset = queryset.filter(date__range=[start_date, end_date])
+
+        search_query = self.request.GET.get('search', '')
+        if search_query:
+            queryset = queryset.filter(
+                Q(name__icontains=search_query) |
+                Q(location__icontains=search_query)
+            )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
 
 
-def event_detail(request, pk):
-    event = get_object_or_404(
-        Event.objects.select_related('category').prefetch_related('users'),
-        pk=pk
-    )
-    return render(request, 'events/event_detail.html', {'event': event})
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'events/event_detail.html'
+    context_object_name = 'event'
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('category').prefetch_related('users')
 
 
-def event_create(request):
-    if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('event-list')
-    else:
-        form = EventForm()
-    return render(request, 'events/event_form.html', {'form': form})
+@method_decorator(is_organizer, name='dispatch')
+class EventCreateView(LoginRequiredMixin, CreateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'events/event_form.html'
+    success_url = reverse_lazy('event-list')
 
 
-def event_update(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES, instance=event)
-        if form.is_valid():
-            form.save()
-            return redirect('event-detail', pk=pk)
-    else:
-        form = EventForm(instance=event)
-    return render(request, 'events/event_form.html', {'form': form, 'event': event})
+@method_decorator(is_organizer, name='dispatch')
+class EventUpdateView(LoginRequiredMixin, UpdateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'events/event_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('event-detail', kwargs={'pk': self.get_object().pk})
 
 
-def event_delete(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    if request.method == 'POST':
-        event.delete()
-        return redirect('event-list')
-    return render(request, 'events/event_delete.html', {'event': event})
+@method_decorator(is_organizer, name='dispatch')
+class EventDeleteView(LoginRequiredMixin, DeleteView):
+    model = Event
+    template_name = 'events/event_delete.html'
+    success_url = reverse_lazy('event-list')
 
 
 # Categories
@@ -78,7 +86,8 @@ def category_list(request):
 
 
 def category_detail(request, pk):
-    category = get_object_or_404(Category.objects.prefetch_related('events'), pk=pk)
+    category = get_object_or_404(
+        Category.objects.prefetch_related('events'), pk=pk)
     return render(request, 'category/category_detail.html', {'category': category})
 
 
@@ -123,6 +132,7 @@ def rsvp_event(request, pk):
             messages.warning(request, "You have already RSVP'd to this event.")
         else:
             event.users.add(request.user)
-            messages.success(request, f"You have successfully RSVP'd for {event.name}!")
+            messages.success(
+                request, f"You have successfully RSVP'd for {event.name}!")
 
     return redirect('event-detail', pk=pk)
