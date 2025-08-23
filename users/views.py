@@ -59,7 +59,7 @@ def activate_user(request, user_id, token):
 class ProfileView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'users/profile/profile.html')
+        return render(request, 'profile/profile.html')
 
 
 class EditProfileView(LoginRequiredMixin, View):
@@ -71,7 +71,7 @@ class EditProfileView(LoginRequiredMixin, View):
             'profile_form': profile_form,
             'picture_form': picture_form,
         }
-        return render(request, 'users/profile/edit_profile.html', context)
+        return render(request, 'profile/edit_profile.html', context)
 
     def post(self, request, *args, **kwargs):
         profile_form = EditProfileForm(request.POST, instance=request.user)
@@ -89,7 +89,7 @@ class EditProfileView(LoginRequiredMixin, View):
             'profile_form': profile_form,
             'picture_form': picture_form,
         }
-        return render(request, 'users/profile/edit_profile.html', context)
+        return render(request, 'profile/edit_profile.html', context)
 
 
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
