@@ -121,7 +121,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 if DEBUG:
     FRONTEND_URL = 'http://127.0.0.1:8000'
 else:
-    FRONTEND_URL = 'https://eventura-vlpb.onrender.com/'
+    FRONTEND_URL = 'https://eventura-vlpb.onrender.com'
 
 
 MEDIA_URL = '/media/'
