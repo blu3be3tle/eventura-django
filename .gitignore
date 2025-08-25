@@ -55,7 +55,6 @@ build/
 
 # Static and media files (if handled by a CDN or separate deployment)
 staticfiles/
-media/
 
 # Node.js/NPM (if using frontend tools with Django)
 node_modules/
