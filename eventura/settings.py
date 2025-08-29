@@ -116,7 +116,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-FRONTEND_URL = 'http://127.0.0.1:8000'
+if DEBUG:
+    FRONTEND_URL = 'http://127.0.0.1:8000'
+else:
+    FRONTEND_URL = 'https://eventura-django.onrender.com'
 
 
 MEDIA_URL = '/media/'
