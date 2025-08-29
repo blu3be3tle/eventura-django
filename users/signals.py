@@ -37,7 +37,7 @@ def assign_default_role(sender, instance, created, **kwargs):
         participant_group, created = Group.objects.get_or_create(
             name='Participant')
 
-        instance.group.add(participant_group)
+        instance.groups.add(participant_group)
 
 
 @receiver(m2m_changed, sender=Event.users.through)
