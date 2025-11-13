@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event, Category, Participant
+from .models import Event, Category
 
 class EventForm(forms.ModelForm):
     class Meta:
@@ -14,14 +14,3 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['name', 'description']
-
-class ParticipantForm(forms.ModelForm):
-    events = forms.ModelMultipleChoiceField(
-        queryset=Event.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    class Meta:
-        model = Participant
-        fields = ['name', 'email', 'events']

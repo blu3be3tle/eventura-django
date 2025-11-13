@@ -1,0 +1,42 @@
+{% extends 'events/main.html' %}
+
+{% block content %}
+  <div class="bg-white p-8 rounded-lg shadow-md max-w-3xl mx-auto">
+    
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">{{ category.name }}</h1>
+        <p class="text-md text-gray-600 mt-2">{{ category.description }}</p>
+      </div>
+      <div class="flex space-x-2">
+        <a href="{% url 'category-update' category.pk %}" class="bg-blue-500 text-white p-4 rounded hover:bg-blue-600">Edit</a>
+        <a href="{% url 'category-delete' category.pk %}" class="bg-red-500 text-white p-4 rounded hover:bg-red-600">Delete</a>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Events in this Category</h2>
+      {% if category.events.all %}
+        <ul class="space-y-3">
+          {% for event in category.events.all %}
+            <li class="p-4 bg-gray-50 rounded-md flex justify-between items-center">
+              <div>
+                <p class="font-semibold">{{ event.name }}</p>
+                <p class="text-sm text-gray-500">{{ event.date }} - {{ event.location }}</p>
+              </div>
+              <a href="{% url 'event-detail' event.pk %}" class="text-blue-500 hover:underline">View Event</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-gray-500">There are no events in this category yet.</p>
+      {% endif %}
+    </div>
+
+
+    <div class="mt-8">
+      <a href="{% url 'category-list' %}" class="text-blue-600 hover:underline">Back to all categories</a>
+    </div>
+
+  </div>
+{% endblock %}

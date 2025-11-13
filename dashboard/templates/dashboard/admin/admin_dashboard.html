@@ -1,0 +1,48 @@
+{% extends 'events/main.html' %}
+{% load static %}
+
+{% block content %}
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">Admin Dashboard</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+    <a href="?filter=users" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Total Users</h3>
+      <p class="text-3xl font-bold mt-2">{{ total_users }}</p>
+    </a>
+
+    <a href="?filter=categories" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Total Categories</h3>
+      <p class="text-3xl font-bold mt-2">{{ total_categories }}</p>
+    </a>
+
+    <a href="?filter=all" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Total Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ total_events }}</p>
+    </a>
+
+    <a href="?filter=today" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Today's Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ today_events_count }}</p>
+    </a>
+
+    <a href="?filter=upcoming" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Upcoming Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ upcoming_events_count }}</p>
+    </a>
+
+    <a href="?filter=past" class="bg-white p-6 rounded-lg shadow-md text-center block hover:bg-gray-50">
+      <h3 class="text-xl font-semibold text-gray-700">Past Events</h3>
+      <p class="text-3xl font-bold mt-2">{{ past_events_count }}</p>
+    </a>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    {% if current_filter == 'users' %}
+      {% include 'dashboard/includes/user_list.html' %}
+    {% elif current_filter == 'categories' %}
+      {% include 'dashboard/includes/category_list.html' %}
+    {% else %}
+      {% include 'dashboard/includes/event_list.html' %}
+    {% endif %}
+  </div>
+{% endblock %}

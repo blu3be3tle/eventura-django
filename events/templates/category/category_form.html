@@ -1,0 +1,51 @@
+{% extends 'events/main.html' %}
+
+{% block content %}
+  <div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">
+      {% if form.instance.pk %}
+        Edit Category
+      {% else %}
+        Add New Category
+      {% endif %}
+    </h1>
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      <div>
+        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">Category Name</label>
+        <input type="text" name="name" id="{{ form.name.id_for_label }}" value="{{ form.name.value|default:'' }}" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+        {% if form.name.errors %}
+          <p class="text-red-500 text-xs mt-1">{{ form.name.errors|first }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea name="description" id="{{ form.description.id_for_label }}" rows="4" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ form.description.value|default:'' }}</textarea>
+        {% if form.description.errors %}
+          <p class="text-red-500 text-xs mt-1">{{ form.description.errors|first }}</p>
+        {% endif %}
+      </div>
+
+      <div class="mt-8 flex justify-end space-x-4">
+        <a href="{% if form.instance.pk %}
+            {% url 'category-detail' form.instance.pk %}
+          {% else %}
+            {% url 'category-list' %}
+          {% endif %}"
+          class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">
+          Cancel
+        </a>
+
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+          {% if form.instance.pk %}
+            Save Changes
+          {% else %}
+            Create Category
+          {% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

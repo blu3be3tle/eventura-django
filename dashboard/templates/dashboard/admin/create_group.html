@@ -1,0 +1,26 @@
+{% extends 'events/main.html' %}
+
+{% block content %}
+  <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">Create New Group</h1>
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <div>
+        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">Group Name</label>
+        {{ form.name }}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Permissions</label>
+        <div class="mt-2 p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto grid grid-cols-2 gap-2">{{ form.permissions }}</div>
+      </div>
+
+      <div class="flex justify-end space-x-4">
+        <a href="{% url 'group-list' %}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">Cancel</a>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Create Group</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
