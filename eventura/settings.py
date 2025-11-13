@@ -1,6 +1,5 @@
 import os
 import dj_database_url
-from decouple import config
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
@@ -73,7 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'eventura.wsgi.application'
 DB_LIVE = os.environ.get("DB_LIVE")
-
 
 DATABASES = {
     "default": dj_database_url.config(
